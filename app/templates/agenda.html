@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+    <h1 class="text-center">Agenda de eventos</h1>
+     
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-success">
+                <tr>
+                    <th scope="col">Evento</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Local</th>
+                    <th scope="col">Descrição</th>
+                    {% if current_user.has_permission(8) %}
+                    <th scope="col">Deletar evento</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for even in eventos %}
+                <tr>
+                    <th scope="row">{{ even.name_event }}</th>
+                    <td>{{ even.date }}</td>
+                    <td>{{ even.local }}</td>
+                    <td>{{ even.description }}</td>
+                    {% if current_user.has_permission(8) %}
+                    <td>
+                        <a class="btn btn-danger" href="{{ url_for('main.evento_delete', id=even.id)}}">
+                            Deletar
+                        </a>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

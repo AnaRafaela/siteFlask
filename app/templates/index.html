@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block page_content %}
+
+<div class="content">
+  <div class="card">
+    <div class="card-header text-center">
+        <h3>Seja bem vindo(a),  
+            {% if current_user.is_anonymous %}
+            se inscreva e faça login para participar!
+            {% else %}
+            {{ current_user.name }}!
+            {% endif %}
+          </h3>
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p>{% if current_user.has_permission(4) %}
+              {{ wtf.quick_form(form) }}
+              {% endif %}
+            </p>
+        </blockquote>
+      </div>
+    </div>
+    <h3 class="text-center">Espaço dos amigos do Patas</h3>
+    {% for post in posts %}
+    <li class="posts">
+      <div class="card mb-3">
+        <div class="row">
+          <div class="col-md-2">
+            <img src="{{ url_for('static', filename='img/caoegato.png') }}" class="card-img" alt="...">
+          </div>
+          <div class="col-md-9">
+            <div class="card-body">
+              <h5 class="card-title"><div class="post-author">
+                  <a href="{{ url_for('.user', username=post.author.username) }}">
+                    {{ post.author.username }}
+                  </a>
+                </h5>
+              <p class="card-text">
+                  <p><div class="post-body">
+                      {{ post.body }}
+                    </p>
+                  </p>
+              <p class="card-text"><small class="text-muted">{{ post.author.name }}</small></p>
+            </div>
+          </div>
+        </div>
+      </li>
+        {% endfor %}
+      </div>
+
+      <div class="pagination justify-content-center">
+          {{ macros.pagination_widget(pagination, '.index') }}
+      </div>  
+    
+    </div>
+
+</div>
+                
+{% endblock %}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <!-- Meta tags Obrigatórias -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/paws.png') }}" type="image/x-icon" >
+    <title>Patas</title>
+</head>
+<body>
+
+{% block navbar %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Alterna navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(Página atual)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.agendas_list') }}">Agenda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.voluntarios_list') }}">Perfil dos voluntários</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Voluntário
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{ url_for('main.edit_profile') }}">Editar perfil</a>                        
+                        </div>
+                      </li>
+                      {% endif %}
+                    {% if current_user.has_permission(8) %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Adminstração
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{{ url_for('main.agenda') }}">Agendar eventos</a>
+                        {% if current_user.has_permission(16) %}
+                        <a class="dropdown-item" href="{{ url_for('main.edit_voluntarios_admin') }}">Lista de usuários</a>
+                        {% endif %}
+                    </div>
+                    </li>
+                    {% endif %}
+                     
+                
+            </ul>
+            <ul class="nav navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li>
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                    Logout
+                </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
+                            Faça</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">
+                        Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
+                            ou</a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.register') }}">Cadastre-se</a>
+                </li>                
+                {% endif %}
+
+            </ul>
+        </div>
+    </nav>
+</header>
+
+{% endblock %}
+{% block content %}
+
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="content">
+            <img class="rounded mx-auto d-block" src="{{ url_for('static', filename='img/illustration-foot-prints.jpg') }}" alt="">    
+            <div class="container">
+            {% block page_content %}
+            
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+
+<footer>
+    <div class="container text-center">
+        Projeto desenvolvido para a aula de desenvolvimento web. <br> 
+        Projeto 2 - Fundamentos de Flask <br>
+        &copy: 2019 Ana Rafaela Gil dos Reis
+    </div> 
+</footer>
+
+</body>
+<!-- JavaScript (Opcional) -->
+<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+{% endblock %}
+</html>

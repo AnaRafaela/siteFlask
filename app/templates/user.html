@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block page_content %}
+<div class="page-header">
+
+    <div class="card text-center">
+        <div class="card-header">
+            {{ user.username }}
+        </div>
+        <div class="card-body">
+                {% if user.name or user.location %}
+            <h5 class="card-title">
+                {% if user.name %}{{ user.name }}{% endif %}<br>
+                {% if user.location %}
+                De <a href="http://maps.google.com/?q={{ user.location }}">
+                    {{ user.location }}
+                </a>
+                {% endif %}
+                {% endif %}
+            </h5>
+            <p class="card-text">
+                <p>
+                    <div class="badge badge-secondary">
+                        Seguidores: {{ user.followers.count() }}
+                    </div>
+                    <div class="badge badge-secondary">
+                        Seguindo: {{ user.followed.count() }}
+                    </div>
+                </p>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %} 
+            </p>
+            {% if current_user.has_permission(1) and user != current_user %}
+            {% if not current_user.is_following(user) %}
+                <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">
+                    Seguir
+                </a>
+                {% else %}
+                <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-danger">
+                    Deixar de seguir
+                </a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="card-footer text-muted">
+                Membro desde {{ user.member_since.day }}/{{ user.member_since.month }}/{{ user.member_since.year }}.
+        </div>
+        Projeto
+{% endblock %}
